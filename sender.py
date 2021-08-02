@@ -3,8 +3,12 @@ from email.mime.text import MIMEText
 import smtplib
 import yaml
 from time import sleep
+from threading import Thread
 
 import serial
+
+
+last_received = ''
 
 
 def meta_loader():
@@ -47,20 +51,25 @@ def monitor_status():
 
     # Check the oxygen level
     ser = serial.Serial(meta['com_port'], meta['port'], timeout=1)
+    
+    with ser:
+        while True:
+            # Read the serial port and parse data
+            line = ser.readline()
+            line = line.decode()
+            line = line.strip()
 
-    while True:
-        line = ser.readline()
-        line = line.decode()
-        line = line.strip()
-        try:
-            value = float(line)
-        except ValueError:
-            value = 0
-        print(value)
-        
-        if value < meta['o2_th'] and value != 0:
-            send_email(meta)
-            sleep(meta['sleep_time'])
+            # Try to convert value to float
+            try:
+                value = float(line)
+            except ValueError:
+                value = 0
+            print(value)
+            
+            # Check if the value is within the range
+            if value < meta['o2_th'] and value != 0:
+                send_email(meta)
+                sleep(meta['sleep_time'])
 
 
 if __name__ == '__main__':
