@@ -1,6 +1,6 @@
 # Email config
 subject: "Alert - Oxygen level"
-email: "XXXXXX@gmail.com"
+email: "sender@gmail.com"
 password: "XXXXXXXX"
 recipients:
   - "email@hotmail.com"
@@ -9,5 +9,6 @@ recipients:
 
 # Serial config
 port: 9600
-com_port: "/dev/ttyUSB0"
+com_port: "/dev/cu.usbmodem14101"
 o2_th: 200
+sleep_time: 900

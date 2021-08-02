@@ -2,6 +2,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
 import yaml
+from time import sleep
 
 import serial
 
@@ -45,18 +46,22 @@ def monitor_status():
     meta = meta_loader()
 
     # Check the oxygen level
-    ser = serial.Serial(meta['com_port'], meta['port'], timeout=0)
+    ser = serial.Serial(meta['com_port'], meta['port'], timeout=1)
 
     while True:
         line = ser.readline()
         line = line.decode()
         line = line.strip()
-        value = float(line)
+        try:
+            value = float(line)
+        except ValueError:
+            value = 0
+        print(value)
         
-        if value < meta['o2_th']:
+        if value < meta['o2_th'] and value != 0:
             send_email(meta)
+            sleep(meta['sleep_time'])
 
 
 if __name__ == '__main__':
-    email_meta = meta_loader()
-    send_email(email_meta)
+    monitor_status()
