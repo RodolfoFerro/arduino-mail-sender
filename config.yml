@@ -1,0 +1,13 @@
+# Email config
+subject: "Alert - Oxygen level"
+email: "XXXXXX@gmail.com"
+password: "XXXXXXXX"
+recipients:
+  - "email@hotmail.com"
+  - "email@gmail.com"
+
+
+# Serial config
+port: 9600
+com_port: "/dev/ttyUSB0"
+o2_th: 200
